@@ -1,6 +1,6 @@
 import type { AWS } from "@serverless/typescript";
 
-import hello from "@functions/hello";
+import receiveMessage from "@functions/receive-message";
 
 const serverlessConfiguration: AWS = {
 	service: "omnipizza-serverless",
@@ -20,7 +20,7 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { hello },
+	functions: { receiveMessage },
 	package: { individually: true },
 	custom: {
 		esbuild: {

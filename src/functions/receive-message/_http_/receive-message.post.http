@@ -1,0 +1,7 @@
+POST https://oqkafrygk3.execute-api.us-east-1.amazonaws.com/dev/receive-message HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Eduardo",
+  "message": "Hello, World! Testando a API..."
+}
