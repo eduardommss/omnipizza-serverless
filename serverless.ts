@@ -1,5 +1,6 @@
 import type { AWS } from "@serverless/typescript";
 
+import messageProcess from "@functions/message-process";
 import receiveMessage from "@functions/receive-message";
 
 const serverlessConfiguration: AWS = {
@@ -20,7 +21,7 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { receiveMessage },
+	functions: { receiveMessage, messageProcess },
 	package: { individually: true },
 	custom: {
 		esbuild: {

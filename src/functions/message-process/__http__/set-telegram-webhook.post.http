@@ -1,0 +1,5 @@
+
+@telegram_token=7429407108:AAFpjpSRqcSJZpJj5iXrHXHUyjkepE82_ZY
+@receive_message_url=https://oqkafrygk3.execute-api.us-east-1.amazonaws.com/dev/receive-message
+
+POST https://api.telegram.org/bot{{telegram_token}}/setWebhook?url={{receive_message_url}} HTTP/1.1
