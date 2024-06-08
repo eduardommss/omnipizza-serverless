@@ -34,6 +34,16 @@ const serverlessConfiguration: AWS = {
 			concurrency: 10,
 		},
 	},
+	resources: {
+		Resources: {
+			ReceiveMessageQueue: {
+				Type: "AWS::SQS::Queue",
+				Properties: {
+					QueueName: "ReceiveMessageQueue",
+				},
+			},
+		},
+	},
 };
 
 module.exports = serverlessConfiguration;
