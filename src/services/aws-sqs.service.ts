@@ -4,8 +4,9 @@ import {
 	SQSClient,
 } from "@aws-sdk/client-sqs";
 
+import { ELogLevel } from "../enums";
 import { getAwsRegion } from "./environment.service";
-import { ELogLevel, writeLog } from "./log.service";
+import { LogService } from "./log";
 
 export namespace AWSSQSService {
 	const sqsClient: SQSClient = new SQSClient({
@@ -32,7 +33,7 @@ export namespace AWSSQSService {
 		let sendResult = false;
 
 		try {
-			writeLog(ELogLevel.DEBUG, "AWSSQSService::sendMessage", params);
+			LogService.write(ELogLevel.DEBUG, "AWSSQSService::sendMessage", params);
 
 			const command = new SendMessageCommand(params);
 
@@ -40,7 +41,7 @@ export namespace AWSSQSService {
 				.send(command)
 				.then((data) => {
 					sendResult = true;
-					writeLog(
+					LogService.write(
 						ELogLevel.DEBUG,
 						"AWSSQSService::sendMessage::SUCCESS",
 						data,
@@ -48,12 +49,20 @@ export namespace AWSSQSService {
 				})
 				.catch((error) => {
 					sendResult = false;
-					writeLog(ELogLevel.ERROR, "AWSSQSService::sendMessage::ERROR", error);
+					LogService.write(
+						ELogLevel.ERROR,
+						"AWSSQSService::sendMessage::ERROR",
+						error,
+					);
 				});
 
 			return sendResult;
 		} catch (error) {
-			writeLog(ELogLevel.ERROR, "AWSSQSService::sendMessage::ERROR", error);
+			LogService.write(
+				ELogLevel.ERROR,
+				"AWSSQSService::sendMessage::ERROR",
+				error,
+			);
 			return false;
 		}
 	};

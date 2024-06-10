@@ -3,24 +3,25 @@ import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 
+import { ELogLevel } from "../../enums";
+import { LogService } from "../../services";
+
 import type { TelegramMessage } from "../../models";
 
 import type schema from "./schema";
 const receiveMessage: ValidatedEventAPIGatewayProxyEvent<
 	typeof schema
 > = async (event) => {
-	console.log(
+	LogService.write(
+		ELogLevel.DEBUG,
 		"Event body received: ",
 		JSON.stringify(event.body, undefined, 2),
 	);
 
 	try {
-		const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
-		const body = event.body as unknown as TelegramMessage;
-
-		bot.api.sendMessage(body.message.chat.id, body.message.text);
+		// AWSSQSService.sendMessage(
 	} catch (error) {
-		console.error("Error sending message: ", error);
+		LogService.write(ELogLevel.ERROR, "Error sending message: ", error);
 	}
 
 	return formatJSONResponse({
