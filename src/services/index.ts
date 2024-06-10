@@ -1,3 +1,3 @@
-export * from "./aws-sqs.service";
-export * from "./environment.service";
+export * from "./aws";
+export * from "./environment";
 export * from "./log";

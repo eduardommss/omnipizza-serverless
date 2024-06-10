@@ -37,10 +37,10 @@ const serverlessConfiguration: AWS = {
 	},
 	resources: {
 		Resources: {
-			ReceiveMessageQueue: {
+			QueueReceiveMessage: {
 				Type: "AWS::SQS::Queue",
 				Properties: {
-					QueueName: "ReceiveMessageQueue",
+					QueueName: "queue-receive-message",
 				},
 			},
 		},

@@ -4,28 +4,41 @@ import {
 	SQSClient,
 } from "@aws-sdk/client-sqs";
 
-import { ELogLevel } from "../enums";
-import { getAwsRegion } from "./environment.service";
-import { LogService } from "./log";
+import { ELogLevel } from "../../../enums";
+import { EnvironmentService } from "../../environment";
+import { LogService } from "../../log";
+import { queueList } from "./aws-sqs.data";
 
+import type { EQueueName } from "./aws-sqs.enum";
 export namespace AWSSQSService {
 	const sqsClient: SQSClient = new SQSClient({
-		region: getAwsRegion(),
+		region: EnvironmentService.getAwsRegion(),
 	});
 
 	/**
 	 * Envia uma mensagem para uma Fila do SQS
-	 * @param queue URL da Fila do SQS
+	 * @param queueName URL da Fila do SQS
 	 * @param body Corpo da mensagem
 	 * @param delaySeconds Tempo de atraso para envio da mensagem
 	 */
 	export const sendMessage = async <T>(
-		queue: string,
+		queueName: EQueueName,
 		body: T,
 		delaySeconds?: number,
 	): Promise<boolean> => {
+		const queue = queueList.find((q) => q.name === queueName);
+
+		if (!queue) {
+			LogService.write(
+				ELogLevel.ERROR,
+				"AWSSQSService::sendMessage::ERROR",
+				`Queue ${queueName} not found in queueList`,
+			);
+			return false;
+		}
+
 		const params: SendMessageCommandInput = {
-			QueueUrl: queue,
+			QueueUrl: queue.url,
 			MessageBody: JSON.stringify(body),
 			DelaySeconds: delaySeconds || 0,
 		};

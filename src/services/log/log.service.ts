@@ -1,5 +1,5 @@
 import { ELogLevel } from "../../enums/log.enum";
-import { getLogLevel } from "../environment.service";
+import { getLogLevel } from "../environment/environment.service";
 
 export namespace LogService {
 	/**
