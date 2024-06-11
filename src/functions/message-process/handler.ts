@@ -1,30 +1,28 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
-// import { Bot } from "grammy";
+import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway'
 
-import { formatJSONResponse } from "@libs/api-gateway";
-import { middyfy } from "@libs/lambda";
+import { formatJSONResponse } from '@libs/api-gateway'
+import { middyfy } from '@libs/lambda'
 
-// import type { TelegramMessage } from "../../models";
+import { TelegramMessageServiceAdapter } from '../../services/message'
 
-import type schema from "./schema";
-const messageProcess: ValidatedEventAPIGatewayProxyEvent<
-	typeof schema
-> = async (event) => {
-	console.log("Message: ", JSON.stringify(event.body, undefined, 2));
+import type schema from './schema'
+const messageProcess: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  console.log('Message: ', JSON.stringify(event.body, undefined, 2))
 
-	// try {
-	// 	const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
-	// 	const body = event.body as unknown as TelegramMessage;
+  try {
+    const telegramMessageService = new TelegramMessageServiceAdapter()
 
-	// 	bot.api.sendMessage(body.message.chat.id, body.message.text);
-	// } catch (error) {
-	// 	console.error("Error sending message: ", error);
-	// }
+    const chatId = (event.body.message as any).chat.id as string
 
-	return formatJSONResponse({
-		message: `Corpo da mensagem recebida: ${JSON.stringify(event.body, undefined, 2)}`,
-		event,
-	});
-};
+    await telegramMessageService.sendMessage(chatId, (event.body.message as any).text)
+  } catch (error) {
+    console.error('Error sending message: ', error)
+  }
 
-export const main = middyfy(messageProcess);
+  return formatJSONResponse({
+    message: `Corpo da mensagem recebida: ${JSON.stringify(event.body, undefined, 2)}`,
+    event
+  })
+}
+
+export const main = middyfy(messageProcess)
