@@ -60,4 +60,8 @@ export namespace AWSSQSService {
       return false
     }
   }
+
+  export const getQueue = async (queueName: EQueueName) => {
+    return queueList.find((q) => q.name === queueName)
+  }
 }
