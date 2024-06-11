@@ -9,11 +9,12 @@ import { AWSSQSService } from '../../services/aws'
 import { EQueueName } from '../../services/aws/sqs'
 
 import type schema from './schema'
+
 const receiveMessage: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   LogService.write(ELogLevel.DEBUG, 'Event body received: ', JSON.stringify(event.body, undefined, 2))
 
   try {
-    AWSSQSService.sendMessage(EQueueName.QUEUE_RECEIVE_MESSAGE, event.body)
+    await AWSSQSService.sendMessage(EQueueName.QUEUE_RECEIVE_MESSAGE, event.body)
   } catch (error) {
     LogService.write(ELogLevel.ERROR, 'Error sending message: ', error)
   }
