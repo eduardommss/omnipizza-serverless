@@ -1,19 +1,33 @@
 import { ELogLevel } from '../../enums'
+import { TelegramMessage } from '../../models'
 import { LogService } from '../../services'
 import { IMessageService, TelegramMessageServiceAdapter } from '../../services/message'
 
 const messageProcess = async (event) => {
-  LogService.write(ELogLevel.DEBUG, 'Event received: ', JSON.stringify(event, undefined, 2))
-  LogService.write(ELogLevel.DEBUG, 'Event body received: ', JSON.stringify(event.body, undefined, 2))
+  LogService.write(ELogLevel.DEBUG, 'messageProcess::Event received: ', JSON.stringify(event, undefined, 2))
+  LogService.write(ELogLevel.DEBUG, 'messageProcess::Event type: ', typeof event)
 
+  if (!event?.Records) {
+    LogService.write(ELogLevel.ERROR, 'messageProcess::ERROR', 'No records found in event body')
+    return
+  }
+
+  for (const record of event.Records) {
+    await process(record)
+  }
+}
+
+const process = async (record) => {
   try {
+    const telegramMessage: TelegramMessage = JSON.parse(record.body)
+
     const messageService: IMessageService = new TelegramMessageServiceAdapter()
 
-    const chatId = (event.body.message as any).chat.id as string
+    const chatId = telegramMessage.message?.chat?.id
 
-    await messageService.sendMessage(chatId, (event.body.message as any).text)
+    await messageService.sendMessage(chatId, telegramMessage.message.text)
   } catch (error) {
-    LogService.write(ELogLevel.ERROR, 'Error sending message: ', error)
+    LogService.write(ELogLevel.ERROR, 'messageProcess::process::Error sending message: ', { record, error })
   }
 }
 
