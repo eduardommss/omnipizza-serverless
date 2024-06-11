@@ -14,13 +14,17 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true
     },
-    iamRoleStatements: [
-      {
-        Effect: 'Allow',
-        Action: ['sqs:sendMessage'],
-        Resource: 'arn:aws:sqs:*:*:QueueReceiveMessage'
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: ['sqs:SendMessage'],
+            Resource: 'arn:aws:sqs:*:*:*'
+          }
+        ]
       }
-    ],
+    },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
