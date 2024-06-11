@@ -38,7 +38,7 @@ export namespace EnvironmentService {
    * @description retorna o ID da conta AWS
    */
   export function getAwsAccountId(): string {
-    return process.env.AWS_ACCOUNT_ID || '123456789012'
+    return process.env.AWS_ACCOUNT_ID || '000000000000'
   }
 
   /**
