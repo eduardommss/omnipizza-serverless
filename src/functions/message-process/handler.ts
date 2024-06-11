@@ -18,7 +18,7 @@ const messageProcess: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
 
     await messageService.sendMessage(chatId, (event.body.message as any).text)
   } catch (error) {
-    console.error('Error sending message: ', error)
+    LogService.write(ELogLevel.ERROR, 'Error sending message: ', error)
   }
 
   return formatJSONResponse({
