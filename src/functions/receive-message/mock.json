@@ -2,5 +2,5 @@
   "headers": {
     "Content-Type": "application/json"
   },
-  "body": "{\"name\": \"Frederic\"}"
+  "body": "{\"update_id\": 469839757, \"message\": {\"message_id\": 201, \"from\": {\"id\": 213058423, \"is_bot\": false, \"first_name\": \"Eduardo\", \"last_name\": \"Moreira\", \"username\": \"eduardo_mmss\", \"language_code\": \"pt-br\"}, \"chat\": {\"id\": 213058423, \"first_name\": \"Eduardo\", \"last_name\": \"Moreira\", \"username\": \"eduardo_mmss\", \"type\": \"private\"}, \"date\": 1718185462, \"text\": \"Aqui vai uma mensagem de teste!\"}}"
 }

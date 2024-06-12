@@ -31,7 +31,7 @@ const serverlessConfiguration: AWS = {
       NODE_ENV: 'dev',
       APP_NAME: 'omnipizza',
       APP_REGION: 'us-east-1',
-      APP_LOG_LEVEL: 'DEBUG',
+      APP_LOG_LEVEL: 'INFO',
       AWS_ACCOUNT_ID: '637423435366',
       REDIS_CACHE_DISABLED: 'true',
       TELEGRAM_BOT_TOKEN: '7429407108:AAFpjpSRqcSJZpJj5iXrHXHUyjkepE82_ZY'
