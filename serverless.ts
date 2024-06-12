@@ -20,7 +20,12 @@ const serverlessConfiguration: AWS = {
           {
             Effect: 'Allow',
             Action: ['sqs:SendMessage'],
-            Resource: 'arn:aws:sqs:*:*:*'
+            Resource: 'arn:aws:sqs:us-east-1:*:*'
+          },
+          {
+            Effect: 'Allow',
+            Action: ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
+            Resource: 'arn:aws:dynamodb:us-east-1:*:table/chats'
           }
         ]
       }
@@ -58,6 +63,25 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::SQS::Queue',
         Properties: {
           QueueName: 'queue-receive-message'
+        }
+      },
+      ChatsTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: 'chats',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'chatId',
+              AttributeType: 'S'
+            }
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'chatId',
+              KeyType: 'HASH'
+            }
+          ],
+          BillingMode: 'PAY_PER_REQUEST'
         }
       }
     }

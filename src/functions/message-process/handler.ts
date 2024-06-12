@@ -1,11 +1,10 @@
 import { ELogLevel } from '../../enums'
-import { TelegramMessage } from '../../models'
+import { ITelegramMessage } from '../../models'
 import { LogService } from '../../services'
 import { IMessageService, TelegramMessageServiceAdapter } from '../../services/message'
 
 const messageProcess = async (event) => {
-  LogService.write(ELogLevel.DEBUG, 'messageProcess::Event received: ', JSON.stringify(event, undefined, 2))
-  LogService.write(ELogLevel.DEBUG, 'messageProcess::Event type: ', typeof event)
+  LogService.write(ELogLevel.INFO, 'messageProcess::Event received: ', JSON.stringify(event, undefined, 2))
 
   if (!event?.Records) {
     LogService.write(ELogLevel.ERROR, 'messageProcess::ERROR', 'No records found in event body')
@@ -19,7 +18,7 @@ const messageProcess = async (event) => {
 
 const process = async (record) => {
   try {
-    const telegramMessage: TelegramMessage = JSON.parse(record.body)
+    const telegramMessage: ITelegramMessage = JSON.parse(record.body)
 
     const messageService: IMessageService = new TelegramMessageServiceAdapter()
 
