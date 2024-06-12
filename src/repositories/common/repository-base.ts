@@ -25,10 +25,10 @@ export class RepositoryBase<T> implements IRepositoryBase<T> {
     return await this.dynamoDbService.getAll<T>(params)
   }
 
-  async put(item: T): Promise<void> {
+  async create(item: T): Promise<void> {
     const params = {
       TableName: this.tableName,
-      Item: item
+      Item: { ...item, createdAt: new Date().toISOString() }
     }
 
     await this.dynamoDbService.put(params)
@@ -37,7 +37,7 @@ export class RepositoryBase<T> implements IRepositoryBase<T> {
   async update(item: T): Promise<void> {
     const params = {
       TableName: this.tableName,
-      Item: item
+      Item: { ...item, updatedAt: new Date().toISOString() }
     }
 
     await this.dynamoDbService.put(params)

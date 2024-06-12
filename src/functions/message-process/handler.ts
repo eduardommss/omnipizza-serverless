@@ -1,6 +1,6 @@
 import { ELogLevel } from '../../enums'
-import { ITelegramMessage } from '../../models'
-import { LogService } from '../../services'
+import { IChat, ITelegramMessage } from '../../models'
+import { ChatService, LogService } from '../../services'
 import { IMessageService, TelegramMessageServiceAdapter } from '../../services/message'
 
 const messageProcess = async (event) => {
@@ -20,6 +20,8 @@ const process = async (record) => {
   try {
     const telegramMessage: ITelegramMessage = JSON.parse(record.body)
 
+    await saveChat(telegramMessage)
+
     const messageService: IMessageService = new TelegramMessageServiceAdapter()
 
     const chatId = telegramMessage.message?.chat?.id
@@ -28,6 +30,17 @@ const process = async (record) => {
   } catch (error) {
     LogService.write(ELogLevel.ERROR, 'messageProcess::process::Error sending message: ', { record, error })
   }
+}
+
+const saveChat = async (telegramMessage: ITelegramMessage) => {
+  LogService.write(ELogLevel.INFO, 'messageProcess::saveChat', telegramMessage.message.chat)
+
+  const chat: IChat = {
+    id: telegramMessage.message.chat.id.toString(),
+    username: telegramMessage.message.chat.username
+  }
+
+  await ChatService.createChat(chat)
 }
 
 export const main = messageProcess

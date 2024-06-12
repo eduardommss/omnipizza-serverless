@@ -71,13 +71,13 @@ const serverlessConfiguration: AWS = {
           TableName: 'chats',
           AttributeDefinitions: [
             {
-              AttributeName: 'chatId',
+              AttributeName: 'id',
               AttributeType: 'S'
             }
           ],
           KeySchema: [
             {
-              AttributeName: 'chatId',
+              AttributeName: 'id',
               KeyType: 'HASH'
             }
           ],
