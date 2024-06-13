@@ -3,6 +3,6 @@ import { RepositoryBase } from './common/repository-base'
 
 export class ChatRepository extends RepositoryBase<IChat> {
   constructor() {
-    super('chat')
+    super('chats')
   }
 }
