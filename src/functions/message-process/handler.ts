@@ -35,12 +35,16 @@ const process = async (record) => {
 const saveChat = async (telegramMessage: ITelegramMessage) => {
   LogService.write(ELogLevel.INFO, 'messageProcess::saveChat', telegramMessage.message.chat)
 
-  const chat: IChat = {
-    id: telegramMessage.message.chat.id.toString(),
-    username: telegramMessage.message.chat.username
-  }
+  try {
+    const chat: IChat = {
+      id: telegramMessage.message.chat.id.toString(),
+      username: telegramMessage.message.chat.username
+    }
 
-  await ChatService.createChat(chat)
+    await ChatService.createChat(chat)
+  } catch (error) {
+    LogService.write(ELogLevel.ERROR, 'messageProcess::saveChat::Error saving chat: ', { telegramMessage, error })
+  }
 }
 
 export const main = messageProcess

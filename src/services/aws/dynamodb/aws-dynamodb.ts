@@ -1,11 +1,26 @@
-import { DynamoDB } from 'aws-sdk'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import {
+  DeleteCommandInput,
+  DeleteCommandOutput,
+  PutCommand,
+  PutCommandInput,
+  PutCommandOutput,
+  QueryCommand,
+  UpdateCommand,
+  UpdateCommandInput,
+  UpdateCommandOutput
+} from '@aws-sdk/lib-dynamodb'
+
+import { ELogLevel } from '../../../enums'
+import { LogService } from '../../../services'
+import { EnvironmentService } from '../../environment'
 
 export class DynamoDBService {
   private static instance: DynamoDBService
-  private dynamoDb: DynamoDB.DocumentClient
+  private dynamoDbClient: DynamoDBClient
 
   private constructor() {
-    this.dynamoDb = new DynamoDB.DocumentClient()
+    this.dynamoDbClient = new DynamoDBClient({ region: EnvironmentService.getAwsRegion() })
   }
 
   public static getInstance(): DynamoDBService {
@@ -15,28 +30,32 @@ export class DynamoDBService {
     return DynamoDBService.instance
   }
 
-  public async get<T>(params: DynamoDB.DocumentClient.GetItemInput): Promise<T> {
-    const { Item } = await this.dynamoDb.get(params).promise()
+  public async get<T>(params: QueryCommand): Promise<T> {
+    const { Items } = await this.dynamoDbClient.send(params)
 
-    return Item as T
+    LogService.write(ELogLevel.INFO, 'DynamoDBService::get', Items)
+
+    return Items[0] as T
   }
 
-  public async getAll<T>(params: DynamoDB.DocumentClient.ScanInput): Promise<T[]> {
-    const { Items } = await this.dynamoDb.scan(params).promise()
+  public async getAll<T>(params: QueryCommand): Promise<T[]> {
+    const { Items } = await this.dynamoDbClient.send(params)
+
+    LogService.write(ELogLevel.INFO, 'DynamoDBService::getAll', Items)
 
     return Items as T[]
   }
 
-  public async put(params: DynamoDB.DocumentClient.PutItemInput): Promise<void> {
-    await this.dynamoDb.put(params).promise()
+  public async put(params: PutCommandInput): Promise<PutCommandOutput> {
+    return await this.dynamoDbClient.send(new PutCommand(params))
   }
 
-  public async update(params: DynamoDB.DocumentClient.UpdateItemInput): Promise<void> {
-    await this.dynamoDb.update(params).promise()
+  public async update(params: UpdateCommandInput): Promise<UpdateCommandOutput> {
+    return await this.dynamoDbClient.send(new UpdateCommand(params))
   }
 
-  public async delete(params: DynamoDB.DocumentClient.DeleteItemInput): Promise<void> {
-    await this.dynamoDb.delete(params).promise()
+  public async delete(params: DeleteCommandInput): Promise<DeleteCommandOutput> {
+    return await this.dynamoDbClient.send(new UpdateCommand(params))
   }
 }
 
